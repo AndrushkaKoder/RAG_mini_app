@@ -19,7 +19,7 @@ class LLM:
         )
 
     async def ask(self, prompt: str) -> str:
-        documents = self.vector_storage.similarity_search(k=8, query=prompt)
+        documents = self.vector_storage.similarity_search(k=2, query=prompt)
 
         context = ''
         for document in documents:
@@ -36,7 +36,8 @@ class LLM:
             ],
             options={
                 "temperature": 0.1,
-                "num_ctx": 8192,
+                "num_ctx": 3072,
+                "num_gpu": 35,
             },
         )
 
