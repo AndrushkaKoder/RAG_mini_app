@@ -6,3 +6,6 @@ down:
 	${COMPOSE} down
 
 restart: down up
+
+server:
+	uvicorn src.main:app --reload
