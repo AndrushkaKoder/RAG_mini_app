@@ -1,9 +1,9 @@
 services:
-  llm:
-    container_name: llm
+  ollama:
+    container_name: ollama
     build:
-      context: .
-      dockerfile: docker/ollama/Dockerfile
+      context: docker/ollama
+      dockerfile: Dockerfile
     volumes:
       - ollama_storage:/root/.ollama
     ports:
@@ -16,6 +16,8 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [ gpu ]
+
+
 
   qdrant:
     image: qdrant/qdrant:latest

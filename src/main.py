@@ -1,25 +1,34 @@
-from fastapi import FastAPI, File, UploadFile
-from src.storage import Storage
-from parser.pdf_parser import PdfParser
+from typing import Any
+from fastapi import FastAPI, File, UploadFile, BackgroundTasks
+from pydantic import BaseModel
+from src.pdf_parser.pdf_parser import PdfParser
+from src.llm.llm import LLM
 
 app = FastAPI()
 
-STORAGE_PATH = 'storage'
+
+class AskRequest(BaseModel):
+    prompt: str
 
 
-@app.get("/ask", status_code=200)
-async def root(query: str = None) -> dict[str, str]:
-    if query is None:
-        return {'message': 'Задайте вопрос'}
+@app.post("/api/query", status_code=200)
+async def query(request: AskRequest) -> dict[str, Any] | None:
+    prompt = request.prompt
+    model = LLM()
+    response = await model.ask(prompt)
 
-    ##Будем подцеплять данные из векторной бд и передавать в LLM
-    return {"Ваш вопрос": query}
+    return {'response': response}
 
 
-@app.post(path='/api/download', status_code=200)
-async def load_file(pdf: UploadFile = File(...)):
-    saved_file_path = Storage(pdf).save()
+@app.post(path='/api/upload', status_code=200)
+async def load_file(file: UploadFile = File(...)):
+    pass
 
-    PdfParser.parse(saved_file_path)
 
-    return {"status": "success", "message": 'Процесс запущен'}
+@app.get('/api/index', status_code=200)
+async def index(tasks: BackgroundTasks):
+    parser = PdfParser()
+
+    tasks.add_task(func=parser.parse)
+
+    return {'message': 'ok'}

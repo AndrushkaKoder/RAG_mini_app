@@ -1,9 +1,8 @@
 import shutil
-
 from fastapi import UploadFile, File
 import pathlib
 
-class Storage:
+class FileStorage:
     storage_path = 'storage'
 
     def __init__(self, file: UploadFile = File(...)):
@@ -21,4 +20,4 @@ class Storage:
         with open(self.filepath, "wb") as buffer:
             shutil.copyfileobj(self.file.file, buffer)
 
-        return self
+        return self.filepath
