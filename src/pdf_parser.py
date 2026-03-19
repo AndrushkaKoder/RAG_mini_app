@@ -1,21 +1,23 @@
 import pathlib
 
+import langchain_text_splitters
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_qdrant import QdrantVectorStore
-import langchain_text_splitters
-from langchain_community.embeddings import FastEmbedEmbeddings
+
 import src.config
+from src.vector_store import clear_storage, get_embeddings
 
 
 class PdfParser:
     books_dir = 'storage'
 
     def __init__(self):
-        self.embeddings = FastEmbedEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+        self.embeddings = get_embeddings()
 
     def parse(self) -> None:
-
         books = pathlib.Path(self.books_dir).glob("**/*.pdf")
+
+        clear_storage()
 
         for book in books:
             try:
@@ -25,7 +27,7 @@ class PdfParser:
                 documents = loader.load()
 
                 text_splitter = langchain_text_splitters.RecursiveCharacterTextSplitter(
-                    chunk_size=1200,
+                    chunk_size=800,
                     chunk_overlap=200,
                     separators=["\n\n", "\n", ".", " ", ""]
                 )
@@ -40,7 +42,7 @@ class PdfParser:
                     force_recreate=False
                 )
 
-                print(f'Загружен: {book.name}')
+                print(f'===== Загружен: {book.name} =====')
 
             except Exception as e:
                 print(f'Ошибка загрузки: {str(e)}')

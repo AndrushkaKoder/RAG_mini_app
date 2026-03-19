@@ -99,3 +99,4 @@ zstandard==0.25.0
 
 langchain
 ollama
+pytelegrambotapi

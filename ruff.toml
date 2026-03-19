@@ -1,0 +1,16 @@
+line-length = 100
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501", # line too long — контролируется line-length
+]
+
+[lint.isort]
+known-first-party = ["src"]

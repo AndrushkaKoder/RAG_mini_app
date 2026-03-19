@@ -1,24 +1,4 @@
 services:
-  ollama:
-    container_name: ollama
-    build:
-      context: docker/ollama
-      dockerfile: Dockerfile
-    volumes:
-      - ollama_storage:/root/.ollama
-    ports:
-      - "11434:11434"
-    restart: always
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [ gpu ]
-
-
-
   qdrant:
     image: qdrant/qdrant:latest
     container_name: qdrant
@@ -30,5 +10,4 @@ services:
     restart: always
 
 volumes:
-  ollama_storage:
   qdrant_storage:

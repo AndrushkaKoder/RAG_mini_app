@@ -9,3 +9,12 @@ restart: down up
 
 server:
 	uvicorn src.main:app --reload
+
+index:
+	python -m console.db_upload
+
+lint:
+	ruff check .
+
+lint-fix:
+	ruff check --fix .

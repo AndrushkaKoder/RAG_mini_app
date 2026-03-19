@@ -1,6 +1,8 @@
-import shutil
-from fastapi import UploadFile, File
 import pathlib
+import shutil
+
+from fastapi import File, UploadFile
+
 
 class FileStorage:
     storage_path = 'storage'
